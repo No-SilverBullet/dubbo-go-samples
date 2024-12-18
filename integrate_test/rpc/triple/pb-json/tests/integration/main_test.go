@@ -18,16 +18,19 @@
 package integration
 
 import (
-	"dubbo.apache.org/dubbo-go/v3"
-	"dubbo.apache.org/dubbo-go/v3/common/constant"
 	"os"
 	"testing"
+)
 
-	greet "github.com/apache/dubbo-go-samples/rpc/triple/pb-json/proto"
-
+import (
+	"dubbo.apache.org/dubbo-go/v3"
 	"dubbo.apache.org/dubbo-go/v3/client"
-
+	"dubbo.apache.org/dubbo-go/v3/common/constant"
 	_ "dubbo.apache.org/dubbo-go/v3/imports"
+)
+
+import (
+	greet "github.com/apache/dubbo-go-samples/rpc/triple/pb-json/proto"
 )
 
 var greeterProvider greet.GreetService

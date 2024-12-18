@@ -120,13 +120,13 @@ func (u *UserProviderTriple) QueryAll(_ context.Context) (*UserResponse, error) 
 	}, nil
 }
 
-func (u *UserProviderTriple) MethodMapper() map[string]string {
-	return map[string]string{
-		"QueryUser":  "queryUser",
-		"QueryUsers": "queryUsers",
-		"QueryAll":   "queryAll",
-	}
-}
+// func (u *UserProviderTriple) MethodMapper() map[string]string {
+// 	return map[string]string{
+// 		"QueryUser":  "queryUser",
+// 		"QueryUsers": "queryUsers",
+// 		"QueryAll":   "queryAll",
+// 	}
+// }
 
 func (u *UserProviderTriple) Reference() string {
 	return "UserProviderTriple"

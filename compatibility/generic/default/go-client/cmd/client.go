@@ -19,6 +19,9 @@ package main
 
 import (
 	"context"
+	"log"
+	"net/http"
+	_ "net/http/pprof"
 	"time"
 )
 
@@ -31,41 +34,55 @@ import (
 	hessian "github.com/apache/dubbo-go-hessian2"
 
 	"github.com/dubbogo/gost/log/logger"
-
-	tpconst "github.com/dubbogo/triple/pkg/common/constant"
 )
 
 import (
 	"github.com/apache/dubbo-go-samples/compatibility/generic/default/go-client/pkg"
 )
 
+	//tpconst "github.com/dubbogo/triple/pkg/common/constant"
 const appName = "dubbo.io"
 
 // export DUBBO_GO_CONFIG_PATH= PATH_TO_SAMPLES/generic/default/go-client/conf/dubbogo.yml
 func main() {
+	go func() {
+		log.Println(http.ListenAndServe("127.0.0.1:6060", nil))
+	}()
 	// register POJOs
 	hessian.RegisterPOJO(&pkg.User{})
-
-	// generic invocation samples using hessian serialization on Dubbo protocol
-	dubboRefConf := newRefConf("org.apache.dubbo.samples.UserProvider", dubbo.DUBBO)
-	callGetUser(dubboRefConf)
-	//callGetOneUser(dubboRefConf)
-	callGetUsers(dubboRefConf)
-	callGetUsersMap(dubboRefConf)
-	callQueryUser(dubboRefConf)
-	callQueryUsers(dubboRefConf)
-	//callQueryAll(dubboRefConf)
+	anchorTime := time.Now()
+	for {
+		if time.Since(anchorTime) > 4*time.Minute {
+			break
+		}
+		dubboRefConf := newRefConf("org.apache.dubbo.samples.UserProvider", dubbo.DUBBO)
+		callGetUser(dubboRefConf)
+	}
+	// for i := 0; i < 10000; i++ {
+	// 	// generic invocation samples using hessian serialization on Dubbo protocol
+	// 	dubboRefConf := newRefConf("org.apache.dubbo.samples.UserProvider", dubbo.DUBBO)
+	// 	callGetUser(dubboRefConf)
+	// 	//callGetOneUser(dubboRefConf)
+	// 	// callGetUsers(dubboRefConf)
+	// 	// callGetUsersMap(dubboRefConf)
+	// 	// callQueryUser(dubboRefConf)
+	// 	// callQueryUsers(dubboRefConf)
+	// 	//callQueryAll(dubboRefConf)
+	// }
 
 	// generic invocation samples using hessian serialization on Triple protocol
-	tripleRefConf := newRefConf("org.apache.dubbo.samples.UserProviderTriple", tpconst.TRIPLE)
-	callGetUser(tripleRefConf)
-	//callGetOneUser(tripleRefConf)
-	callGetUsers(tripleRefConf)
-	callGetUsersMap(tripleRefConf)
-	callQueryUser(tripleRefConf)
-	callQueryUsers(tripleRefConf)
-	//callQueryAll(tripleRefConf)
-
+	// for i := 0; i < 10000; i++ {
+	// 	tripleRefConf := newRefConf("org.apache.dubbo.samples.UserProviderTriple", tpconst.TRIPLE)
+	// 	callGetUser(tripleRefConf)
+	// 	//callGetOneUser(tripleRefConf)
+	// 	callGetUsers(tripleRefConf)
+	// 	callGetUsersMap(tripleRefConf)
+	// 	callQueryUser(tripleRefConf)
+	// 	callQueryUsers(tripleRefConf)
+	// 	//callQueryAll(tripleRefConf)
+	// }
+	time.Sleep(1 * time.Minute)
+	select {}
 }
 
 func callGetUser(refConf config.ReferenceConfig) {
@@ -238,8 +255,9 @@ func callQueryAll(refConf config.ReferenceConfig) {
 
 func newRefConf(iface, protocol string) config.ReferenceConfig {
 	registryConfig := &config.RegistryConfig{
-		Protocol: "zookeeper",
-		Address:  "127.0.0.1:2181",
+		Protocol:     "zookeeper",
+		Address:      "127.0.0.1:2181",
+		RegistryType: "service",
 	}
 
 	refConf := config.ReferenceConfig{
@@ -249,9 +267,12 @@ func newRefConf(iface, protocol string) config.ReferenceConfig {
 		Protocol:      protocol,
 		Generic:       "true",
 	}
-
+	metadataConf := &config.MetadataReportConfig{
+		Protocol: "zookeeper",
+		Address:  "127.0.0.1:2181",
+	}
 	rootConfig := config.NewRootConfigBuilder().
-		AddRegistry("zk", registryConfig).
+		AddRegistry("zk", registryConfig).SetMetadataReport(metadataConf).
 		Build()
 	if err := config.Load(config.WithRootConfig(rootConfig)); err != nil {
 		panic(err)
