@@ -23,24 +23,19 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 	"time"
-)
 
-import (
 	"dubbo.apache.org/dubbo-go/v3/config"
 	"dubbo.apache.org/dubbo-go/v3/config/generic"
+
 	_ "dubbo.apache.org/dubbo-go/v3/imports"
 	"dubbo.apache.org/dubbo-go/v3/protocol/dubbo"
 
 	hessian "github.com/apache/dubbo-go-hessian2"
-
+	"github.com/apache/dubbo-go-samples/compatibility/generic/default/go-client/pkg"
 	"github.com/dubbogo/gost/log/logger"
 )
 
-import (
-	"github.com/apache/dubbo-go-samples/compatibility/generic/default/go-client/pkg"
-)
-
-	//tpconst "github.com/dubbogo/triple/pkg/common/constant"
+// tpconst "github.com/dubbogo/triple/pkg/common/constant"
 const appName = "dubbo.io"
 
 // export DUBBO_GO_CONFIG_PATH= PATH_TO_SAMPLES/generic/default/go-client/conf/dubbogo.yml
@@ -55,6 +50,7 @@ func main() {
 		if time.Since(anchorTime) > 4*time.Minute {
 			break
 		}
+		time.Sleep(1 * time.Second)
 		dubboRefConf := newRefConf("org.apache.dubbo.samples.UserProvider", dubbo.DUBBO)
 		callGetUser(dubboRefConf)
 	}
