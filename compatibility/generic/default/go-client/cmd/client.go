@@ -90,7 +90,8 @@ func callGetUser(refConf config.ReferenceConfig) {
 	)
 
 	if err != nil {
-		panic(err)
+		//panic(err)
+		logger.Errorf("GetUser1(userId string) error: %v", err)
 	}
 	logger.Infof("GetUser1(userId string) res: %+v", resp)
 
@@ -101,7 +102,8 @@ func callGetUser(refConf config.ReferenceConfig) {
 		[]hessian.Object{"A003", "lily"},
 	)
 	if err != nil {
-		panic(err)
+		//panic(err)
+		logger.Errorf("GetUser2(userId string, name string) error: %v", err)
 	}
 	logger.Infof("GetUser2(userId string, name string) res: %+v", resp)
 
@@ -112,7 +114,8 @@ func callGetUser(refConf config.ReferenceConfig) {
 		[]hessian.Object{1},
 	)
 	if err != nil {
-		panic(err)
+		//panic(err)
+		logger.Errorf("GetUser3(userCode int) error: %v", err)
 	}
 	logger.Infof("GetUser3(userCode int) res: %+v", resp)
 
@@ -123,7 +126,8 @@ func callGetUser(refConf config.ReferenceConfig) {
 		[]hessian.Object{1, "zhangsan"},
 	)
 	if err != nil {
-		panic(err)
+		//panic(err)
+		logger.Errorf("GetUser4(userCode int, name string) error: %v", err)
 	}
 	logger.Infof("GetUser4(userCode int, name string) res: %+v", resp)
 }
